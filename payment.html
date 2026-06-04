@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Checkout | Yoru Turf</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@800;900&family=Public+Sans:wght@400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Public Sans', sans-serif;
+            background-color: #fcfbf7;
+            color: #2b3a2a;
+            margin: 0;
+            padding: 20px 40px;
+        }
+
+        .brand-logo {
+            font-family: 'Kanit', sans-serif;
+            font-weight: 900;
+            font-size: 28px;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+            color: #1b4d22;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .brand-logo::after {
+            content: '●';
+            color: #4ca64c;
+            margin-left: 4px;
+            font-size: 18px;
+        }
+
+        header nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 2px solid #eadeca;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #2b3a2a;
+            font-weight: 600;
+            margin-left: 25px;
+            font-size: 16px;
+        }
+
+        .checkout-container {
+            max-width: 500px;
+            margin: 40px auto;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid #eadeca;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+        }
+
+        h2 {
+            font-family: 'Kanit', sans-serif;
+            font-weight: 800;
+            font-size: 24px;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        h3 {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #7a8d78;
+            margin-bottom: 12px;
+        }
+
+        .order-summary {
+            background-color: #f4f6f3;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #eadeca;
+            margin-bottom: 25px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+
+        .summary-row.total {
+            border-top: 1px dashed #eadeca;
+            margin-top: 12px;
+            padding-top: 12px;
+            font-weight: 600;
+            font-size: 18px;
+            color: #1b4d22;
+        }
+
+        .intent-pay-btn {
+            display: block;
+            width: 100%;
+            font-family: 'Public Sans', sans-serif;
+            font-weight: 600;
+            font-size: 18px;
+            padding: 16px;
+            background-color: #1b4d22;
+            color: #fcfbf7;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            box-sizing: border-box;
+            margin-bottom: 25px;
+        }
+
+        .intent-pay-btn:hover {
+            background-color: #2b3a2a;
+        }
+
+        /* Verification Status Layout Elements */
+        .verification-status-card {
+            border: 1px solid #eadeca;
+            background-color: #fffdf9;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .timer-countdown {
+            font-family: 'Kanit', sans-serif;
+            font-size: 32px;
+            color: #b23b3b;
+            margin: 10px 0;
+        }
+
+        .verify-btn {
+            width: 100%;
+            font-family: 'Public Sans', sans-serif;
+            font-weight: 600;
+            font-size: 16px;
+            padding: 14px;
+            background-color: #ffffff;
+            color: #1b4d22;
+            border: 2px solid #1b4d22;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .verify-btn:hover {
+            background-color: #1b4d22;
+            color: #fcfbf7;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav>
+            <div class="brand-logo">Yoru Turf</div>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="booking.html">Book Slots</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="checkout-container">
+            <h2>Complete Your Booking</h2>
+
+            <h3>Booking Summary</h3>
+            <div class="order-summary">
+                <div class="summary-row">
+                    <span>Venue:</span>
+                    <strong>Yoru Premium Turf</strong>
+                </div>
+                <div class="summary-row">
+                    <span>Advance Booking Deposit:</span>
+                    <span>₹50.00</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Amount Due Now:</span>
+                    <span>₹50.00</span>
+                </div>
+            </div>
+
+            <div id="payment-trigger-zone">
+                <h3>Step 1: Instant App Payment</h3>
+                <a id="upi-intent-link" href="#" class="intent-pay-btn" onclick="startVerificationFlow(event)">
+                    📱 Open Payment App (Pay ₹50)
+                </a>
+            </div>
+
+            <div id="verification-zone" class="verification-status-card hidden">
+                <h3>Step 2: Payment Verification</h3>
+                <p style="font-size: 14px; margin: 0; color: #7a8d78;">Completing transaction securely inside your mobile bank application...</p>
+                
+                <div id="countdown-clock" class="timer-countdown">03:00</div>
+                
+                <p style="font-size: 13px; margin: 0 0 20px 0; font-weight: 600;">Once your app payment is complete, click the confirmation button below.</p>
+                <button class="verify-btn" onclick="sendAutomatedNotification()">I Have Completed Payment</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const merchantUpiId = "9479499555@axl"; 
+        const businessName = "Pawan Chouhan";
+        const exactAmount = "50.00";
+        const destinationWhatsappPhone = "919479499555"; 
+
+        const upiIntentUrl = `upi://pay?pa=${encodeURIComponent(merchantUpiId)}&pn=${encodeURIComponent(businessName)}&am=${exactAmount}&cu=INR`;
+        document.getElementById('upi-intent-link').href = upiIntentUrl;
+
+        let timerInterval;
+
+        function startVerificationFlow(event) {
+            const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+            
+            if (!isMobile) {
+                event.preventDefault(); 
+                alert(`Desktop View Detected!\n\nPlease open your mobile UPI app and transfer exactly ₹${exactAmount} to:\n\nUPI ID: ${merchantUpiId}\nName: ${businessName}`);
+            }
+
+            // Reveal the countdown status block card container layout options
+            document.getElementById('payment-trigger-zone').classList.add('hidden');
+            document.getElementById('verification-zone').classList.remove('hidden');
+            
+            runVerificationTimer(180); // Start a standard 3-minute structural safety limit countdown
+        }
+
+        function runVerificationTimer(durationSeconds) {
+            let timer = durationSeconds;
+            const display = document.getElementById('countdown-clock');
+            
+            timerInterval = setInterval(() => {
+                let minutes = parseInt(timer / 60, 10);
+                let seconds = parseInt(timer % 60, 10);
+
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                display.textContent = `${minutes}:${seconds}`;
+
+                if (--timer < 0) {
+                    clearInterval(timerInterval);
+                    display.textContent = "00:00";
+                    display.style.color = "#7a8d78";
+                }
+            }, 1000);
+        }
+
+        function sendAutomatedNotification() {
+            clearInterval(timerInterval);
+
+            // Generate an immutable verification control hash value to replace random text variables
+            const generatedToken = "YORU-" + Math.floor(100000 + Math.random() * 900000);
+            const confirmationTimestamp = new Date().toLocaleTimeString();
+
+            const messageText = `⚡ AUTOMATED TURF BOOKING REQUEST ⚡\n\nMerchant Account: ${businessName}\nAmount Paid: ₹${exactAmount}\nSession Status: Intent Completed\nSystem Token: ${generatedToken}\nTime: ${confirmationTimestamp}\n\nCheck your bank alerts and lock this timeline block instantly!`;
+            
+            const encodedMessage = encodeURIComponent(messageText);
+            const whatsappUrl = `https://wa.me/${destinationWhatsappPhone}?text=${encodedMessage}`;
+
+            alert('Payment notification token compiled! Launching message client...');
+            window.location.href = whatsappUrl;
+        }
+    </script>
+</body>
+</html>
