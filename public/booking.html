@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Slots | Yoru Turf</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,800;0,900;1,800;1,900&family=Public+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    
+    <style>
+        :root {
+            --window-blue: #0046ff;
+            --window-bg: #e2f3fe;
+            --cyber-white: #ffffff;
+            --text-dark: #001246;
+            --accent-cyan: #00d2ff;
+        }
+
+        body {
+            font-family: 'Public Sans', sans-serif;
+            background-color: #bfe3ff;
+            background-image: radial-gradient(var(--accent-cyan) 1px, transparent 0), radial-gradient(var(--window-blue) 1px, transparent 0);
+            background-size: 24px 24px;
+            background-position: 0 0, 12px 12px;
+            color: var(--text-dark);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            box-sizing: border-box;
+        }
+
+        .window-container {
+            width: 100%;
+            max-width: 600px;
+            background-color: var(--window-bg);
+            border: 4px solid var(--window-blue);
+            border-radius: 12px;
+            box-shadow: 8px 8px 0px rgba(0, 70, 255, 0.2);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            margin-top: 10px;
+            box-sizing: border-box;
+        }
+
+        .window-header {
+            background-color: var(--window-blue);
+            color: var(--cyber-white);
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 4px solid var(--window-blue);
+        }
+
+        .brand-logo {
+            font-family: 'Kanit', sans-serif;
+            font-weight: 900;
+            font-size: 24px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: var(--cyber-white);
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .control-icon {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--cyber-white);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .app-nav-bar {
+            background-color: var(--cyber-white);
+            padding: 10px 20px;
+            display: flex;
+            gap: 20px;
+            border-bottom: 2px solid rgba(0, 70, 255, 0.15);
+        }
+
+        .app-nav-bar a {
+            text-decoration: none;
+            color: var(--window-blue);
+            font-weight: 800;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 4px 10px;
+            border-radius: 4px;
+            transition: all 0.15s ease;
+        }
+
+        .app-nav-bar a:hover, .app-nav-bar a.active {
+            background-color: var(--window-blue);
+            color: var(--cyber-white);
+        }
+
+        .window-body {
+            padding: 16px;
+            position: relative;
+            box-sizing: border-box;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .calendar-header h2, #selected-date-title {
+            font-family: 'Kanit', sans-serif;
+            font-weight: 900;
+            font-style: italic;
+            font-size: 26px;
+            text-transform: uppercase;
+            color: var(--window-blue);
+            margin: 0;
+        }
+
+        .month-nav-btn, .back-btn {
+            font-family: 'Public Sans', sans-serif;
+            font-weight: 800;
+            text-transform: uppercase;
+            background-color: var(--cyber-white);
+            color: var(--window-blue);
+            border: 3px solid var(--window-blue);
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            box-shadow: 3px 3px 0px var(--window-blue);
+            transition: all 0.1s ease;
+        }
+
+        .month-nav-btn:hover:not(:disabled), .back-btn:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 4px 4px 0px var(--window-blue);
+            background-color: var(--window-blue);
+            color: var(--cyber-white);
+        }
+
+        .month-nav-btn:active:not(:disabled), .back-btn:active {
+            transform: translate(1px, 1px);
+            box-shadow: 1px 1px 0px var(--window-blue);
+        }
+
+        .month-nav-btn:disabled {
+            background-color: #cbd5e1;
+            color: #94a3b8;
+            border-color: #94a3b8;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, minmax(0, 1fr));
+            gap: 6px;
+            text-align: center;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .weekday {
+            font-weight: 800;
+            color: var(--window-blue);
+            font-size: 12px;
+            text-transform: uppercase;
+            padding-bottom: 5px;
+        }
+
+        .day {
+            box-sizing: border-box;
+            padding: 10px 0;
+            font-size: 14px;
+            font-weight: 800;
+            border-radius: 8px;
+            cursor: pointer;
+            background-color: var(--cyber-white);
+            border: 2px solid var(--window-blue);
+            color: var(--text-dark);
+            box-shadow: 2px 2px 0px rgba(0, 70, 255, 0.15);
+            transition: all 0.1s ease;
+        }
+
+        .day:hover:not(.past-day):not(.empty) {
+            transform: translate(-2px, -2px);
+            box-shadow: 5px 5px 0px var(--window-blue);
+            background-color: var(--window-blue);
+            color: var(--cyber-white);
+        }
+
+        .day.past-day {
+            background-color: #cbd5e1;
+            color: #64748b;
+            border-color: #94a3b8;
+            box-shadow: none;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .day.empty {
+            background: none;
+            border: none;
+            box-shadow: none;
+            cursor: default;
+            pointer-events: none;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .back-btn {
+            margin-bottom: 25px;
+            display: inline-block;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+            color: var(--text-dark);
+        }
+
+        .custom-select {
+            width: 100%;
+            padding: 14px;
+            font-family: 'Public Sans', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-dark);
+            background-color: var(--cyber-white);
+            border: 3px solid var(--window-blue);
+            border-radius: 8px;
+            box-shadow: 4px 4px 0px rgba(0, 70, 255, 0.1);
+            cursor: pointer;
+            outline: none;
+        }
+
+        .custom-select:focus {
+            box-shadow: 4px 4px 0px var(--window-blue);
+        }
+
+        .price-summary {
+            background-color: var(--cyber-white);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border: 3px solid var(--window-blue);
+            box-shadow: 4px 4px 0px rgba(0, 70, 255, 0.1);
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .price-row.total {
+            border-top: 3px dashed var(--window-blue);
+            margin-top: 12px;
+            padding-top: 12px;
+            font-weight: 800;
+            font-size: 19px;
+            color: var(--window-blue);
+        }
+
+        .book-now-btn {
+            width: 100%;
+            font-family: 'Public Sans', sans-serif;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 16px;
+            background-color: var(--cyber-white);
+            color: var(--window-blue);
+            border: 3px solid var(--window-blue);
+            border-radius: 8px;
+            font-size: 17px;
+            box-shadow: 5px 5px 0px var(--window-blue);
+            cursor: pointer;
+            display: block;
+            text-align: center;
+            text-decoration: none;
+            box-sizing: border-box;
+            transition: all 0.15s ease;
+        }
+
+        .book-now-btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 7px 7px 0px var(--window-blue);
+            background-color: var(--window-blue);
+            color: var(--cyber-white);
+        }
+
+        .book-now-btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: 3px 3px 0px var(--window-blue);
+        }
+
+        .pixel-star {
+            position: absolute;
+            font-size: 24px;
+            color: var(--window-blue);
+            user-select: none;
+            opacity: 0.3;
+            font-weight: bold;
+        }
+        .star-1 { top: 15px; right: 25px; }
+        .star-2 { bottom: 15px; left: 25px; }
+
+        @media (min-width: 480px) {
+            body { padding: 40px; }
+            .window-container { margin-top: 20px; box-shadow: 12px 12px 0px rgba(0, 70, 255, 0.2); }
+            .window-body { padding: 30px; }
+            .calendar-grid { gap: 10px; }
+            .weekday { font-size: 14px; }
+            .day { padding: 14px 0; font-size: 15px; border-width: 3px; box-shadow: 3px 3px 0px rgba(0, 70, 255, 0.15); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="window-container">
+        <div class="window-header">
+            <div class="brand-logo">YORU.EXE</div>
+            <div class="window-controls">
+                <span class="control-icon">_</span>
+                <span class="control-icon">▢</span>
+                <span class="control-icon">✕</span>
+            </div>
+        </div>
+
+        <div class="app-nav-bar">
+            <a href="index.html">Home</a>
+            <a href="booking.html" class="active">Book Slots</a>
+        </div>
+
+        <div class="window-body">
+            <div class="pixel-star star-1">✦</div>
+            <div class="pixel-star star-2">✦</div>
+
+            <div id="calendar-view">
+                <div class="calendar-header">
+                    <button id="prev-month-btn" class="month-nav-btn" onclick="changeMonth(-1)">Prev</button>
+                    <h2 id="month-year-title"></h2>
+                    <button class="month-nav-btn" onclick="changeMonth(1)">Next</button>
+                </div>
+                <div class="calendar-grid" id="calendar-days-container"></div>
+            </div>
+
+            <div id="time-view" class="hidden">
+                <button class="back-btn" onclick="showCalendar()">← Calendar</button>
+                <h2 id="selected-date-title" style="margin-bottom: 25px;">Configure Match</h2>
+
+                <div class="form-group">
+                    <label for="start-time-select">Select Match Start Time:</label>
+                    <select id="start-time-select" class="custom-select"></select>
+                </div>
+
+                <div class="form-group">
+                    <label for="duration-select">Select Duration:</label>
+                    <select id="duration-select" class="custom-select">
+                        <option value="1">1 Hour</option>
+                        <option value="1.5">1.5 Hours</option>
+                        <option value="2">2 Hours</option>
+                        <option value="3">3 Hours</option>
+                    </select>
+                </div>
+
+                <div class="price-summary">
+                    <div class="price-row">
+                        <span>Advance Booking Deposit:</span>
+                        <span>₹50</span>
+                    </div>
+                    <div class="price-row total">
+                        <span>Total Deposit Due Now:</span>
+                        <span>₹50</span>
+                    </div>
+                </div>
+
+                <button class="book-now-btn" onclick="goToPayment()">Confirm Booking & Pay Advance</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let systemDate = new Date();
+        let currentYear = systemDate.getFullYear();
+        let currentMonth = systemDate.getMonth(); 
+
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        let selectedYear, selectedMonth, selectedDay;
+
+        const bookedSlotsDatabase = {
+            "2026-5-3": [
+                { startHour: 17, startMin: 15, endHour: 19, endMin: 15 }
+            ]
+        };
+
+        renderCalendar(currentMonth, currentYear);
+
+        function renderCalendar(month, year) {
+            const monthYearTitle = document.getElementById('month-year-title');
+            const daysContainer = document.getElementById('calendar-days-container');
+            const prevBtn = document.getElementById('prev-month-btn');
+
+            monthYearTitle.innerText = `${monthNames[month]} ${year}`;
+            daysContainer.innerHTML = '';
+
+            if (year === systemDate.getFullYear() && month === systemDate.getMonth()) {
+                prevBtn.disabled = true;
+            } else {
+                prevBtn.disabled = false;
+            }
+
+            const weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+            weekdays.forEach(day => {
+                const dayHeader = document.createElement('div');
+                dayHeader.classList.add('weekday');
+                dayHeader.innerText = day;
+                daysContainer.appendChild(dayHeader);
+            });
+
+            let firstDayIndex = new Date(year, month, 1).getDay();
+            let firstDayShifted = firstDayIndex === 0 ? 6 : firstDayIndex - 1;
+            let totalDaysInMonth = new Date(year, month + 1, 0).getDate();
+
+            for (let i = 0; i < firstDayShifted; i++) {
+                const emptyCell = document.createElement('div');
+                emptyCell.classList.add('day', 'empty');
+                daysContainer.appendChild(emptyCell);
+            }
+
+            for (let day = 1; day <= totalDaysInMonth; day++) {
+                const dayCell = document.createElement('div');
+                dayCell.classList.add('day');
+                dayCell.innerText = day;
+
+                let evaluationDate = new Date(year, month, day);
+                let comparisonToday = new Date(systemDate.getFullYear(), systemDate.getMonth(), systemDate.getDate());
+
+                if (evaluationDate < comparisonToday) {
+                    dayCell.classList.add('past-day');
+                } else {
+                    dayCell.onclick = function() { selectDate(day, month, year); };
+                }
+
+                daysContainer.appendChild(dayCell);
+            }
+        }
+
+        function changeMonth(direction) {
+            currentMonth += direction;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            } else if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            renderCalendar(currentMonth, currentYear);
+        }
+
+        function selectDate(day, month, year) {
+            selectedDay = day;
+            selectedMonth = month;
+            selectedYear = year;
+
+            document.getElementById('calendar-view').classList.add('hidden');
+            document.getElementById('time-view').classList.remove('hidden');
+            document.getElementById('selected-date-title').innerText = `${monthNames[month]} ${day}, ${year}`;
+            
+            populateSmartTimes();
+        }
+
+        function showCalendar() {
+            document.getElementById('time-view').classList.add('hidden');
+            document.getElementById('calendar-view').classList.remove('hidden');
+        }
+
+        function populateSmartTimes() {
+            const startTimeSelect = document.getElementById('start-time-select');
+            startTimeSelect.innerHTML = '';
+
+            let isTodaySelected = (selectedYear === systemDate.getFullYear() && selectedMonth === systemDate.getMonth() && selectedDay === systemDate.getDate());
+            let currentHourNow = systemDate.getHours();
+            let currentMinuteNow = systemDate.getMinutes();
+
+            const dateKey = `${selectedYear}-${selectedMonth}-${selectedDay}`;
+            const activeBookings = bookedSlotsDatabase[dateKey] || [];
+
+            for (let hour = 0; hour < 24; hour++) {
+                if (hour >= 1 && hour <= 5) continue; 
+
+                let displayHour = hour % 12 === 0 ? 12 : hour % 12;
+                let ampm = hour >= 12 ? 'PM' : 'AM';
+                const increments = ['00', '15', '30', '45'];
+                
+                increments.forEach(minute => {
+                    let numMinute = parseInt(minute);
+
+                    if (isTodaySelected) {
+                        if (hour < currentHourNow || (hour === currentHourNow && numMinute <= currentMinuteNow)) {
+                            return; 
+                        }
+                    }
+
+                    let currentTargetInMinutes = (hour * 60) + numMinute;
+                    let isSlotTaken = false;
+
+                    activeBookings.forEach(booking => {
+                        let bookingStartInMinutes = (booking.startHour * 60) + booking.startMin;
+                        let bookingEndInMinutes = (booking.endHour * 60) + booking.endMin;
+
+                        if (currentTargetInMinutes >= bookingStartInMinutes && currentTargetInMinutes < bookingEndInMinutes) {
+                            isSlotTaken = true;
+                        }
+                    });
+
+                    if (isSlotTaken) {
+                        return;
+                    }
+
+                    const option = document.createElement('option');
+                    option.value = `${displayHour}:${minute} ${ampm}`;
+                    option.innerText = `${displayHour}:${minute} ${ampm}`;
+                    startTimeSelect.appendChild(option);
+                });
+            }
+            
+            if (startTimeSelect.options.length === 0) {
+                const option = document.createElement('option');
+                option.innerText = "No slots remaining for today";
+                startTimeSelect.disabled = true;
+                startTimeSelect.appendChild(option);
+            } else {
+                startTimeSelect.disabled = false;
+            }
+        }
+
+        async function goToPayment() {
+            const startTimeSelect = document.getElementById('start-time-select');
+            const durationSelect = document.getElementById('duration-select');
+
+            if (startTimeSelect.disabled || startTimeSelect.value === "No slots remaining for today") {
+                alert("Please select a valid match time slot first.");
+                return;
+            }
+
+            const formattedDate = `${selectedYear}-${selectedMonth + 1}-${selectedDay}`;
+            const selectedTime = startTimeSelect.value;
+            const selectedDuration = durationSelect.value;
+
+            try {
+                const res = await fetch('/api/payments/order', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        date: formattedDate, 
+                        time: selectedTime, 
+                        duration: selectedDuration 
+                    })
+                });
+                
+                const data = await res.json();
+                if (!data.success) {
+                    alert("Error preparing order. Please try again.");
+                    return;
+                }
+                const options = {
+                    key: data.key_id,
+                    amount: data.amount,
+                    currency: 'INR',
+                    name: 'Yoru Turf',
+                    description: `Slot: ${selectedTime} (${selectedDuration} hrs)`,
+                    order_id: data.order_id,
+                    handler: async function (response) {
+                        const verify = await fetch('/api/payments/verify', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                razorpay_order_id: response.razorpay_order_id,
+                                razorpay_payment_id: response.razorpay_payment_id,
+                                razorpay_signature: response.razorpay_signature,
+                                bookingDetails: { 
+                                    date: formattedDate, 
+                                    time: selectedTime, 
+                                    duration: selectedDuration 
+                                }
+                            })
+                        });
+                        
+                        const result = await verify.json();
+                        if (result.success) {
+                            alert('Booking Confirmed! Enjoy your game.');
+                            window.location.reload();
+                        } else {
+                            alert('Payment processing verification failed!');
+                        }
+                    },
+                    prefill: { name: '', email: '', contact: '' },
+                    theme: { color: '#0046ff' }
+                };
+
+                const rzp = new Razorpay(options);
+                rzp.open();
+
+            } catch (error) {
+                console.error("Payment initiation mistake:", error);
+                alert("Could not reach checkout terminal right now.");
+            }
+        }
+    </script>
+</body>
+</html>
