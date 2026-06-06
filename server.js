@@ -6,10 +6,10 @@ const fs = require('fs');
 const Razorpay = require('razorpay');
 
 // Validate required env vars at startup so server fails loudly, not silently
-if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
-    console.error("FATAL: RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET must be set in .env");
-    process.exit(1);
-}
+//if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
+//    console.error("FATAL: RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET must be set in .env");
+//    process.exit(1);
+//}
 
 const app = express();
 app.use(express.json());
