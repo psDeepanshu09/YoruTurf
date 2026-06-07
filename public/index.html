@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yoru Turf | Premium Cricket Arena</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,800;0,900;1,800;1,900&family=Public+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --window-blue: #0046ff;
+            --window-bg: #e2f3fe;
+            --cyber-white: #ffffff;
+            --text-dark: #001246;
+            --accent-cyan: #00d2ff;
+        }
+
+        body {
+            font-family: 'Public Sans', sans-serif;
+            background-color: #bfe3ff;
+            background-image: radial-gradient(var(--accent-cyan) 1px, transparent 0), radial-gradient(var(--window-blue) 1px, transparent 0);
+            background-size: 24px 24px;
+            background-position: 0 0, 12px 12px;
+            color: var(--text-dark);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            box-sizing: border-box;
+        }
+
+        .window-container {
+            width: 100%;
+            max-width: 600px;
+            background-color: var(--window-bg);
+            border: 4px solid var(--window-blue);
+            border-radius: 12px;
+            box-shadow: 8px 8px 0px rgba(0, 70, 255, 0.2);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            margin-top: 10px;
+            box-sizing: border-box;
+        }
+
+        .window-header {
+            background-color: var(--window-blue);
+            color: var(--cyber-white);
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 4px solid var(--window-blue);
+        }
+
+        .brand-logo {
+            font-family: 'Kanit', sans-serif;
+            font-weight: 900;
+            font-size: 24px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: var(--cyber-white);
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .control-icon {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--cyber-white);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .app-nav-bar {
+            background-color: var(--cyber-white);
+            padding: 10px 20px;
+            display: flex;
+            gap: 20px;
+            border-bottom: 2px solid rgba(0, 70, 255, 0.15);
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+
+        .app-nav-bar::-webkit-scrollbar { display: none; }
+
+        .app-nav-bar a {
+            text-decoration: none;
+            color: var(--window-blue);
+            font-weight: 800;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 4px 10px;
+            border-radius: 4px;
+            transition: all 0.15s ease;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .app-nav-bar a:hover, .app-nav-bar a.active {
+            background-color: var(--window-blue);
+            color: var(--cyber-white);
+        }
+
+        .window-body {
+            padding: 16px;
+            position: relative;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .pixel-star {
+            position: absolute;
+            font-size: 24px;
+            color: var(--window-blue);
+            user-select: none;
+            opacity: 0.3;
+            font-weight: bold;
+        }
+        .star-1 { top: 15px; right: 25px; animation: float 4s ease-in-out infinite; }
+        .star-2 { bottom: 15px; left: 25px; animation: float 3.5s ease-in-out infinite 1s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        /* Hero image */
+        .hero-image-wrap {
+            width: 100%;
+            background-color: var(--cyber-white);
+            border: 3px solid var(--window-blue);
+            border-radius: 10px;
+            box-shadow: 4px 4px 0px rgba(0, 70, 255, 0.15);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .hero-img {
+            width: 100%;
+            display: block;
+            max-height: 220px;
+            object-fit: cover;
+        }
+
+        /* Headline */
+        h1 {
+            font-family: 'Kanit', sans-serif;
+            font-weight: 900;
+            font-style: italic;
+            font-size: 38px;
+            text-transform: uppercase;
+            letter-spacing: -0.5px;
+            line-height: 0.95;
+            color: var(--window-blue);
+            margin: 0 0 16px 0;
+        }
+
+        /* Description */
+        .hero-desc {
+            line-height: 1.6;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 24px;
+            background: rgba(255, 255, 255, 0.6);
+            padding: 14px;
+            border-radius: 8px;
+            border-left: 4px solid var(--window-blue);
+        }
+
+        /* CTA Button — matches book-now-btn from booking.html */
+        .cta-btn {
+            width: 100%;
+            font-family: 'Public Sans', sans-serif;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 16px;
+            background-color: var(--cyber-white);
+            color: var(--window-blue);
+            border: 3px solid var(--window-blue);
+            border-radius: 8px;
+            font-size: 17px;
+            box-shadow: 5px 5px 0px var(--window-blue);
+            cursor: pointer;
+            display: block;
+            text-align: center;
+            text-decoration: none;
+            box-sizing: border-box;
+            transition: all 0.15s ease;
+        }
+
+        .cta-btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 7px 7px 0px var(--window-blue);
+            background-color: var(--window-blue);
+            color: var(--cyber-white);
+        }
+
+        .cta-btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: 3px 3px 0px var(--window-blue);
+        }
+
+        /* Feature chips */
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        .feature-chip {
+            background-color: var(--cyber-white);
+            border: 2px solid var(--window-blue);
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: var(--window-blue);
+            box-shadow: 2px 2px 0px rgba(0, 70, 255, 0.15);
+            letter-spacing: 0.3px;
+        }
+
+        @media (min-width: 480px) {
+            body { padding: 40px; }
+            .window-container { margin-top: 20px; box-shadow: 12px 12px 0px rgba(0, 70, 255, 0.2); }
+            .window-body { padding: 30px; }
+            h1 { font-size: 46px; }
+            .hero-img { max-height: 280px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="window-container">
+        <div class="window-header">
+            <div class="brand-logo">YORU.EXE</div>
+            <div class="window-controls">
+                <span class="control-icon">_</span>
+                <span class="control-icon">▢</span>
+                <span class="control-icon">✕</span>
+            </div>
+        </div>
+
+        <div class="app-nav-bar">
+            <a href="index.html" class="active">Home</a>
+            <a href="booking.html">Book Slots</a>
+            <a href="live-slots.html">Live Slots</a>
+        </div>
+
+        <div class="window-body">
+            <div class="pixel-star star-1">✦</div>
+            <div class="pixel-star star-2">✦</div>
+
+            <div class="hero-image-wrap">
+                <img class="hero-img" src="turf iamge.png" alt="Cricket Turf">
+            </div>
+
+            <h1>SMASH SIXES<br>UNDER THE<br>FLOODLIGHTS</h1>
+
+            <div class="features">
+                <span class="feature-chip">⚡ Midnight Cricket</span>
+                <span class="feature-chip">🏏 Premium Turf</span>
+                <span class="feature-chip">💡 Floodlit Arena</span>
+                <span class="feature-chip">₹50 Advance Only</span>
+            </div>
+
+            <div class="hero-desc">
+                Book the ultimate midnight cricket experience. Pay just ₹50 online to reserve your time slot, and pay the remaining balance directly at the turf after your match.
+            </div>
+
+            <a href="booking.html" class="cta-btn">Book Your Slot Now</a>
+        </div>
+    </div>
+
+</body>
+</html>

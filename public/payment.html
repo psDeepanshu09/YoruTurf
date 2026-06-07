@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Checkout | Yoru Turf</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,800;0,900;1,800;1,900&family=Public+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <style>
+        :root {
+            --window-blue: #0046ff;
+            --window-bg: #e2f3fe;
+            --cyber-white: #ffffff;
+            --text-dark: #001246;
+            --accent-cyan: #00d2ff;
+        }
+
+        body {
+            font-family: 'Public Sans', sans-serif;
+            background-color: #bfe3ff;
+            background-image: radial-gradient(var(--accent-cyan) 1px, transparent 0), radial-gradient(var(--window-blue) 1px, transparent 0);
+            background-size: 24px 24px;
+            background-position: 0 0, 12px 12px;
+            color: var(--text-dark);
+            margin: 0;
+            /* FIX: 20px padding to match all other mobile pages */
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            box-sizing: border-box;
+        }
+
+        .window-container {
+            width: 100%;
+            max-width: 600px;
+            background-color: var(--window-bg);
+            border: 4px solid var(--window-blue);
+            border-radius: 12px;
+            box-shadow: 8px 8px 0px rgba(0, 70, 255, 0.2);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            margin-top: 10px;
+            /* FIX: add box-sizing so border doesn't push width */
+            box-sizing: border-box;
+        }
+
+        .window-header {
+            background-color: var(--window-blue);
+            color: var(--cyber-white);
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 4px solid var(--window-blue);
+        }
+
+        .brand-logo {
+            font-family: 'Kanit', sans-serif;
+            font-weight: 900;
+            font-size: 24px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: var(--cyber-white);
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .control-icon {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--cyber-white);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .app-nav-bar {
+            background-color: var(--cyber-white);
+            padding: 10px 20px;
+            display: flex;
+            gap: 20px;
+            border-bottom: 2px solid rgba(0, 70, 255, 0.15);
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+
+        .app-nav-bar::-webkit-scrollbar { display: none; }
+
+        .app-nav-bar a {
+            text-decoration: none;
+            color: var(--window-blue);
+            font-weight: 800;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 4px 10px;
+            border-radius: 4px;
+            transition: all 0.15s ease;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .app-nav-bar a:hover {
+            background-color: var(--window-blue);
+            color: var(--cyber-white);
+        }
+
+        .window-body {
+            padding: 16px;
+            position: relative;
+            box-sizing: border-box;
+        }
+
+        h2 {
+            font-family: 'Kanit', sans-serif;
+            font-weight: 900;
+            font-style: italic;
+            font-size: 26px;
+            text-transform: uppercase;
+            color: var(--window-blue);
+            margin: 0 0 5px 0;
+        }
+
+        h3 {
+            font-family: 'Public Sans', sans-serif;
+            font-weight: 800;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-dark);
+            margin: 0 0 20px 0;
+            opacity: 0.7;
+        }
+
+        .order-summary {
+            background-color: var(--cyber-white);
+            padding: 20px;
+            border-radius: 8px;
+            border: 3px solid var(--window-blue);
+            margin-bottom: 25px;
+            box-shadow: 4px 4px 0px rgba(0, 70, 255, 0.1);
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .summary-row strong {
+            font-weight: 800;
+            color: var(--window-blue);
+        }
+
+        .summary-row.total {
+            border-top: 3px dashed var(--window-blue);
+            margin-top: 16px;
+            padding-top: 16px;
+            font-weight: 800;
+            font-size: 19px;
+            color: var(--window-blue);
+        }
+
+        .pay-btn {
+            display: block;
+            width: 100%;
+            font-family: 'Public Sans', sans-serif;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 17px;
+            padding: 16px;
+            background-color: var(--cyber-white);
+            color: var(--window-blue);
+            border: 3px solid var(--window-blue);
+            border-radius: 8px;
+            box-shadow: 5px 5px 0px var(--window-blue);
+            cursor: pointer;
+            text-align: center;
+            box-sizing: border-box;
+            transition: all 0.15s ease;
+        }
+
+        .pay-btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 7px 7px 0px var(--window-blue);
+            background-color: var(--window-blue);
+            color: var(--cyber-white);
+        }
+
+        .pay-btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: 3px 3px 0px var(--window-blue);
+        }
+
+        .pay-btn:disabled {
+            background-color: #cbd5e1;
+            color: #94a3b8;
+            border-color: #94a3b8;
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .pixel-star {
+            position: absolute;
+            font-size: 24px;
+            color: var(--window-blue);
+            user-select: none;
+            opacity: 0.3;
+            font-weight: bold;
+        }
+        .star-1 { top: 15px; right: 25px; }
+        /* FIX: star-2 was left: -10px causing overflow/scroll — moved inside bounds */
+        .star-2 { bottom: 85px; left: 10px; }
+
+        @media (min-width: 480px) {
+            body { padding: 40px; }
+            .window-container { margin-top: 20px; box-shadow: 12px 12px 0px rgba(0, 70, 255, 0.2); }
+            .window-body { padding: 30px; }
+            h2 { font-size: 28px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="window-container">
+        <div class="window-header">
+            <div class="brand-logo">YORU.EXE</div>
+            <div class="window-controls">
+                <span class="control-icon">_</span>
+                <span class="control-icon">▢</span>
+                <span class="control-icon">✕</span>
+            </div>
+        </div>
+
+        <!-- FIX: added Live Slots nav link to match all other pages -->
+        <div class="app-nav-bar">
+            <a href="index.html">Home</a>
+            <a href="booking.html">Book Slots</a>
+            <a href="live-slots.html">Live Slots</a>
+        </div>
+
+        <div class="window-body">
+            <div class="pixel-star star-1">✦</div>
+            <div class="pixel-star star-2">✦</div>
+
+            <h2>Complete Your Booking</h2>
+            <h3>Booking Summary</h3>
+            
+            <div class="order-summary">
+                <div class="summary-row"><span>Venue:</span><strong>Yoru Premium Turf</strong></div>
+                <div class="summary-row"><span>Selected Date:</span><strong id="display-date">—</strong></div>
+                <div class="summary-row"><span>Match Time Slot:</span><strong id="display-time">—</strong></div>
+                <div class="summary-row"><span>Duration:</span><strong id="display-duration">—</strong></div>
+                <div class="summary-row total"><span>Amount Due Now:</span><span>₹50.00</span></div>
+            </div>
+
+            <button class="pay-btn" id="pay-btn" onclick="initiateGatewayPayment()">Proceed to Payment</button>
+        </div>
+    </div>
+
+    <script>
+        const savedBooking = JSON.parse(sessionStorage.getItem('currentBooking'));
+
+        if (savedBooking) {
+            document.getElementById('display-date').innerText = savedBooking.date;
+            document.getElementById('display-time').innerText = savedBooking.time;
+            document.getElementById('display-duration').innerText = `${savedBooking.duration} Hour(s)`;
+        } else {
+            // FIX: graceful redirect without abrupt alert on direct page load
+            document.getElementById('display-date').innerText = 'No booking found';
+            document.getElementById('display-time').innerText = '—';
+            document.getElementById('display-duration').innerText = '—';
+            const btn = document.getElementById('pay-btn');
+            btn.disabled = true;
+            btn.innerText = 'No Active Booking — Go to Book Slots';
+            btn.style.cursor = 'pointer';
+            btn.disabled = false;
+            btn.onclick = () => { window.location.href = 'booking.html'; };
+        }
+
+        async function initiateGatewayPayment() {
+            if (!savedBooking) {
+                window.location.href = 'booking.html';
+                return;
+            }
+
+            const btn = document.getElementById('pay-btn');
+            btn.disabled = true;
+            btn.innerText = 'Connecting to Gateway...';
+
+            // FIX: full try/catch so network failures don't cause unhandled rejections
+            try {
+                const response = await fetch('/api/payments/order', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(savedBooking)
+                });
+
+                const orderData = await response.json();
+
+                if (!orderData.success) {
+                    alert("Could not create order. Please try again.");
+                    btn.disabled = false;
+                    btn.innerText = 'Proceed to Payment';
+                    return;
+                }
+
+                const paymentOptions = {
+                    key: orderData.key_id,
+                    amount: orderData.amount,
+                    currency: "INR",
+                    name: "Yoru Turf",
+                    description: "Slot Advance Deposit",
+                    order_id: orderData.order_id,
+                    handler: async function (paymentResponse) {
+                        try {
+                            const verifyResponse = await fetch('/api/payments/verify', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    razorpay_order_id: paymentResponse.razorpay_order_id,
+                                    razorpay_payment_id: paymentResponse.razorpay_payment_id,
+                                    razorpay_signature: paymentResponse.razorpay_signature,
+                                    bookingDetails: savedBooking
+                                })
+                            });
+
+                            const result = await verifyResponse.json();
+                            if (result.success) {
+                                sessionStorage.removeItem('currentBooking');
+                                alert("Booking Confirmed! Enjoy your game.");
+                                window.location.href = "index.html";
+                            } else {
+                                alert("Payment verification failed. Please contact support.");
+                                btn.disabled = false;
+                                btn.innerText = 'Proceed to Payment';
+                            }
+                        } catch (verifyErr) {
+                            console.error("Verification error:", verifyErr);
+                            alert("Could not verify payment. Please contact support.");
+                            btn.disabled = false;
+                            btn.innerText = 'Proceed to Payment';
+                        }
+                    },
+                    modal: {
+                        ondismiss: function() {
+                            // Re-enable button if user closes Razorpay modal without paying
+                            btn.disabled = false;
+                            btn.innerText = 'Proceed to Payment';
+                        }
+                    },
+                    theme: { color: '#0046ff' }
+                };
+
+                const rzp = new Razorpay(paymentOptions);
+                rzp.open();
+
+            } catch (err) {
+                console.error("Payment initiation error:", err);
+                alert("Could not reach the checkout server. Please try again.");
+                btn.disabled = false;
+                btn.innerText = 'Proceed to Payment';
+            }
+        }
+    </script>
+</body>
+</html>
