@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Confirmed | Yoru Turf</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,800;0,900;1,800;1,900&family=Public+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --window-blue: #0046ff;
+            --window-bg: #e2f3fe;
+            --cyber-white: #ffffff;
+            --text-dark: #001246;
+            --accent-cyan: #00d2ff;
+        }
+
+        body {
+            font-family: 'Public Sans', sans-serif;
+            background-color: #bfe3ff;
+            background-image: radial-gradient(var(--accent-cyan) 1px, transparent 0), radial-gradient(var(--window-blue) 1px, transparent 0);
+            background-size: 24px 24px;
+            background-position: 0 0, 12px 12px;
+            color: var(--text-dark);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            box-sizing: border-box;
+        }
+
+        .window-container {
+            width: 100%;
+            max-width: 600px;
+            background-color: var(--window-bg);
+            border: 4px solid var(--window-blue);
+            border-radius: 12px;
+            box-shadow: 8px 8px 0px rgba(0, 70, 255, 0.2);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            margin-top: 10px;
+            box-sizing: border-box;
+        }
+
+        .window-header {
+            background-color: var(--window-blue);
+            color: var(--cyber-white);
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand-logo {
+            font-family: 'Kanit', sans-serif;
+            font-weight: 900;
+            font-size: 24px;
+            text-transform: uppercase;
+            color: var(--cyber-white);
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 12px;
+        }
+
+        .control-icon {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--cyber-white);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .app-nav-bar {
+            background-color: var(--cyber-white);
+            padding: 10px 20px;
+            display: flex;
+            gap: 20px;
+            border-bottom: 2px solid rgba(0, 70, 255, 0.15);
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+
+        .app-nav-bar::-webkit-scrollbar { display: none; }
+
+        .app-nav-bar a {
+            text-decoration: none;
+            color: var(--window-blue);
+            font-weight: 800;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 4px 10px;
+            border-radius: 4px;
+            transition: all 0.15s ease;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .app-nav-bar a:hover {
+            background-color: var(--window-blue);
+            color: var(--cyber-white);
+        }
+
+        .window-body {
+            padding: 16px;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        /* Big animated checkmark */
+        .success-badge {
+            text-align: center;
+            padding: 24px 0 16px;
+        }
+
+        .checkmark-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: var(--window-blue);
+            border: 4px solid var(--window-blue);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 6px 6px 0px rgba(0, 70, 255, 0.25);
+            animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+        }
+
+        @keyframes pop {
+            0% { transform: scale(0); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .checkmark-circle svg {
+            width: 40px;
+            height: 40px;
+            stroke: var(--cyber-white);
+            stroke-width: 3;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-dasharray: 60;
+            stroke-dashoffset: 60;
+            animation: draw 0.4s 0.3s ease forwards;
+        }
+
+        @keyframes draw {
+            to { stroke-dashoffset: 0; }
+        }
+
+        .success-title {
+            font-family: 'Kanit', sans-serif;
+            font-weight: 900;
+            font-style: italic;
+            font-size: 30px;
+            text-transform: uppercase;
+            color: var(--window-blue);
+            margin: 14px 0 4px;
+        }
+
+        .success-sub {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-dark);
+            opacity: 0.7;
+            margin: 0;
+        }
+
+        /* Booking details card */
+        .booking-card {
+            background-color: var(--cyber-white);
+            border: 3px solid var(--window-blue);
+            border-radius: 10px;
+            box-shadow: 4px 4px 0px rgba(0, 70, 255, 0.12);
+            padding: 18px;
+            margin: 20px 0;
+        }
+
+        .card-title {
+            font-family: 'Kanit', sans-serif;
+            font-weight: 900;
+            font-style: italic;
+            font-size: 14px;
+            text-transform: uppercase;
+            color: var(--window-blue);
+            letter-spacing: 0.5px;
+            margin: 0 0 14px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px dashed rgba(0, 70, 255, 0.2);
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(0, 70, 255, 0.08);
+            font-size: 14px;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            font-weight: 800;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.4px;
+            color: var(--text-dark);
+            opacity: 0.6;
+        }
+
+        .detail-value {
+            font-weight: 800;
+            color: var(--text-dark);
+            text-align: right;
+            font-size: 14px;
+        }
+
+        .detail-value.highlight {
+            color: var(--window-blue);
+            font-size: 15px;
+        }
+
+        /* Notice box */
+        .notice-box {
+            background-color: rgba(0, 70, 255, 0.06);
+            border: 2px solid rgba(0, 70, 255, 0.2);
+            border-radius: 8px;
+            padding: 14px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-dark);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .notice-box strong {
+            color: var(--window-blue);
+            font-weight: 800;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            width: 100%;
+            font-family: 'Public Sans', sans-serif;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 15px;
+            background-color: var(--window-blue);
+            color: var(--cyber-white);
+            border: 3px solid var(--window-blue);
+            border-radius: 8px;
+            font-size: 15px;
+            box-shadow: 5px 5px 0px rgba(0, 70, 255, 0.3);
+            cursor: pointer;
+            display: block;
+            text-align: center;
+            text-decoration: none;
+            box-sizing: border-box;
+            transition: all 0.15s ease;
+            margin-bottom: 10px;
+        }
+
+        .btn-primary:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 7px 7px 0px rgba(0, 70, 255, 0.3);
+        }
+
+        .btn-secondary {
+            width: 100%;
+            font-family: 'Public Sans', sans-serif;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 15px;
+            background-color: var(--cyber-white);
+            color: var(--window-blue);
+            border: 3px solid var(--window-blue);
+            border-radius: 8px;
+            font-size: 15px;
+            box-shadow: 5px 5px 0px var(--window-blue);
+            cursor: pointer;
+            display: block;
+            text-align: center;
+            text-decoration: none;
+            box-sizing: border-box;
+            transition: all 0.15s ease;
+        }
+
+        .btn-secondary:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 7px 7px 0px var(--window-blue);
+            background-color: var(--window-blue);
+            color: var(--cyber-white);
+        }
+
+        .pixel-star {
+            position: absolute;
+            font-size: 24px;
+            color: var(--window-blue);
+            user-select: none;
+            opacity: 0.25;
+            font-weight: bold;
+        }
+        .star-1 { top: 15px; right: 25px; }
+        .star-2 { bottom: 120px; left: 15px; }
+
+        @media (min-width: 480px) {
+            body { padding: 40px; }
+            .window-container { margin-top: 20px; box-shadow: 12px 12px 0px rgba(0, 70, 255, 0.2); }
+            .window-body { padding: 30px; }
+            .success-title { font-size: 36px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="window-container">
+        <div class="window-header">
+            <div class="brand-logo">YORU.EXE</div>
+            <div class="window-controls">
+                <span class="control-icon">_</span>
+                <span class="control-icon">▢</span>
+                <span class="control-icon">✕</span>
+            </div>
+        </div>
+
+        <div class="app-nav-bar">
+            <a href="index.html">Home</a>
+            <a href="booking.html">Book Slots</a>
+            <a href="live-slots.html">Live Slots</a>
+        </div>
+
+        <div class="window-body">
+            <div class="pixel-star star-1">✦</div>
+            <div class="pixel-star star-2">✦</div>
+
+            <div class="success-badge">
+                <div class="checkmark-circle">
+                    <svg viewBox="0 0 24 24">
+                        <polyline points="4,12 9,17 20,6"/>
+                    </svg>
+                </div>
+                <p class="success-title">Slot Locked In!</p>
+                <p class="success-sub">Your advance deposit has been received.</p>
+            </div>
+
+            <div class="booking-card">
+                <p class="card-title">✦ Booking Details</p>
+                <div class="detail-row">
+                    <span class="detail-label">Name</span>
+                    <span class="detail-value" id="conf-name">—</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Phone</span>
+                    <span class="detail-value" id="conf-phone">—</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Venue</span>
+                    <span class="detail-value">Yoru Premium Turf</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Date</span>
+                    <span class="detail-value highlight" id="conf-date">—</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Time</span>
+                    <span class="detail-value highlight" id="conf-time">—</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Duration</span>
+                    <span class="detail-value" id="conf-duration">—</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Deposit Paid</span>
+                    <span class="detail-value highlight">₹50.00 ✅</span>
+                </div>
+            </div>
+
+            <div class="notice-box">
+                💡 Please pay the <strong>remaining balance at the turf</strong> before your match begins. Show this screen to the staff when you arrive.
+                <br><br>
+                ⚠️ The ₹50 advance deposit is <strong>non-refundable</strong>. Cancellations will not be refunded.
+            </div>
+
+            <a href="booking.html" class="btn-primary">Book Another Slot</a>
+            <a href="index.html" class="btn-secondary">Back to Home</a>
+        </div>
+    </div>
+
+    <script>
+        const booking = JSON.parse(sessionStorage.getItem('confirmedBooking'));
+
+        if (booking) {
+            document.getElementById('conf-name').innerText = booking.name || '—';
+            document.getElementById('conf-phone').innerText = booking.phone || '—';
+            document.getElementById('conf-date').innerText = booking.date || '—';
+            document.getElementById('conf-time').innerText = booking.time || '—';
+            document.getElementById('conf-duration').innerText = booking.duration ? `${booking.duration} Hour(s)` : '—';
+            // Clear session after displaying so it can't be revisited with stale data
+            sessionStorage.removeItem('confirmedBooking');
+            sessionStorage.removeItem('currentBooking');
+        } else {
+            // No booking in session — redirect home
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
